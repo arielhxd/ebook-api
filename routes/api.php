@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HeloController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,23 +20,26 @@ use App\Http\Controllers\BookController;
 */
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-   // return $request->user();
+    //return $request->user();
 //});
 
-Route::get('halo', function(){
+Route::get('hello', function(){
     return ["me" => "Guanheng"];
-});
+}); 
 
-Route::resource('halocontroller', HeloController::class);
+Route::resource('guanheng', HeloController::class);
 
 Route::resource('siswa', SiswaController::class);
 
-// Route::get('books', [BookController::class, 'index']);
+//Public Route
+Route::get('books', [BookController::class, 'index']);
 // Route::get('books/{id}', [BookController::class, 'show']);
-// Route::get('books', [BookController::class, 'store']);
-// Route::get('books/{id}', [BookController::class, 'update']);
-// Route::get('books/{id}', [AuthController::class, 'destroy']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('books', [BookController::class, 'store']);
+    Route::put('books/{id}', [BookController::class, 'update']);
+    Route::delete('books/{id}', [BooKController::class, 'destroy']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
 
-Route::resource('books', BookController::class)->except(
-    ['create','edit']
-);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
